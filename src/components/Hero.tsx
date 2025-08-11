@@ -1,4 +1,7 @@
 import React from 'react';
+import { Shield, Users, Award, ArrowRight } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 // Define an interface for the props the component will receive
 interface HeroProps {
@@ -6,6 +9,17 @@ interface HeroProps {
 }
 
 const Hero = ({ onAuthClick }: HeroProps) => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleGetStarted = () => {
+    if (user) {
+      navigate('/catalogue');
+    } else {
+      onAuthClick();
+    }
+  };
+
   return (
     <section id="home" className="bg-dark-blue pt-16 pb-32">
       <div className="container mx-auto px-4 grid md:grid-cols-2 items-center gap-8">
@@ -19,10 +33,10 @@ const Hero = ({ onAuthClick }: HeroProps) => {
           </p>
           {/* Use the onAuthClick prop for the button's onClick event */}
           <button
-            onClick={onAuthClick}
-            className="border border-white text-white font-semibold px-6 py-3 rounded-lg hover:bg-white hover:text-dark-blue transition-colors"
+            onClick={handleGetStarted}
+            className="bg-gold text-dark-blue font-bold px-8 py-4 rounded-lg text-lg hover:opacity-90 transition-opacity flex items-center gap-2"
           >
-            Request Free Consultation
+            {user ? 'Find Lawyers' : 'Get Started'} <ArrowRight size={20} />
           </button>
         </div>
 
