@@ -227,7 +227,7 @@ const LawyerCatalogue: React.FC = () => {
 
     return (
       <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 overflow-hidden">
-        <div className="bg-gradient-to-r from-indigo-500 to-purple-600 p-4 text-white relative">
+        <div className="bg-gradient-to-r from-dark-blue to-gray-800 p-4 text-white relative">
           <div className="flex justify-between items-start mb-4">
             <div className={`px-2 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 ${
               lawyer.isOnline ? 'bg-green-500' : 'bg-gray-500'
@@ -246,11 +246,11 @@ const LawyerCatalogue: React.FC = () => {
           </div>
 
           <div className="flex flex-col items-center">
-            <div className="w-16 h-16 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-lg mb-2 shadow-lg">
+            <div className="w-16 h-16 bg-gold rounded-xl flex items-center justify-center text-dark-blue font-bold text-lg mb-2 shadow-lg">
               {lawyer.image}
             </div>
             <h3 className="font-bold text-lg mb-1">{lawyer.name}</h3>
-            <p className="text-indigo-200 text-sm">{lawyer.specializations.join(' • ')}</p>
+            <p className="text-gray-300 text-sm">{lawyer.specializations.join(' • ')}</p>
           </div>
         </div>
 
@@ -282,7 +282,7 @@ const LawyerCatalogue: React.FC = () => {
                 onClick={() => setSelectedCallType(type)}
                 className={`p-2 rounded-lg text-center transition-all duration-200 ${
                   selectedCallType === type
-                    ? 'bg-indigo-500 text-white'
+                    ? 'bg-gold text-dark-blue'
                     : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
                 }`}
               >
@@ -293,11 +293,11 @@ const LawyerCatalogue: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-2 gap-2">
-            <button className="bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-4 rounded-lg font-semibold text-sm flex items-center justify-center gap-2 transition-colors">
+            <button className="bg-gold hover:bg-yellow-600 text-dark-blue py-2 px-4 rounded-lg font-semibold text-sm flex items-center justify-center gap-2 transition-colors">
               <Phone className="w-4 h-4" />
               Call
             </button>
-            <button className="border-2 border-gray-200 hover:border-indigo-500 text-gray-700 hover:text-indigo-500 py-2 px-4 rounded-lg font-semibold text-sm flex items-center justify-center gap-2 transition-colors">
+            <button className="border-2 border-gray-200 hover:border-gold text-gray-700 hover:text-gold py-2 px-4 rounded-lg font-semibold text-sm flex items-center justify-center gap-2 transition-colors">
               <MessageCircle className="w-4 h-4" />
               Message
             </button>
@@ -342,7 +342,7 @@ const LawyerCatalogue: React.FC = () => {
             <select
               value={filters.sortBy}
               onChange={(e) => updateFilter('sortBy', e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg appearance-none bg-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="w-full p-3 border border-gray-300 rounded-lg appearance-none bg-white focus:ring-2 focus:ring-gold focus:border-transparent"
             >
               <option value="rating">Rating</option>
               <option value="experience">Experience</option>
@@ -362,7 +362,7 @@ const LawyerCatalogue: React.FC = () => {
               onClick={() => updateFilter('sortOrder', 'asc')}
               className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium ${
                 filters.sortOrder === 'asc'
-                  ? 'bg-indigo-500 text-white'
+                  ? 'bg-gold text-dark-blue'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
@@ -372,7 +372,7 @@ const LawyerCatalogue: React.FC = () => {
               onClick={() => updateFilter('sortOrder', 'desc')}
               className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium ${
                 filters.sortOrder === 'desc'
-                  ? 'bg-indigo-500 text-white'
+                  ? 'bg-gold text-dark-blue'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
@@ -458,7 +458,7 @@ const LawyerCatalogue: React.FC = () => {
               type="checkbox"
               checked={filters.onlineOnly}
               onChange={(e) => updateFilter('onlineOnly', e.target.checked)}
-              className="w-4 h-4 text-indigo-600 bg-gray-100 border-gray-300 rounded focus:ring-indigo-500"
+              className="w-4 h-4 text-gold bg-gray-100 border-gray-300 rounded focus:ring-gold"
             />
             <span className="text-sm font-semibold text-gray-700">Online Only</span>
           </label>
@@ -475,13 +475,13 @@ const LawyerCatalogue: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-4 lg:p-8">
+    <div className="min-h-screen bg-dark-blue p-4 lg:p-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">Find Your Legal Expert</h1>
-          <p className="text-gray-600 text-lg">Connect with verified lawyers for all your legal needs</p>
+          <h1 className="text-4xl font-bold text-white mb-2">Find Your Legal Expert</h1>
+          <p className="text-gray-300 text-lg">Connect with verified lawyers for all your legal needs</p>
           <div className="mt-4">
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-gray-400">
               Showing {filteredAndSortedLawyers.length} of {lawyers.length} lawyers
             </span>
           </div>
@@ -491,7 +491,7 @@ const LawyerCatalogue: React.FC = () => {
           <div className="lg:col-span-1">
             <button
               onClick={() => setShowFilters(true)}
-              className="lg:hidden w-full mb-4 bg-indigo-500 hover:bg-indigo-600 text-white py-3 px-4 rounded-lg font-semibold flex items-center justify-center gap-2 transition-colors"
+              className="lg:hidden w-full mb-4 bg-gold hover:bg-yellow-600 text-dark-blue py-3 px-4 rounded-lg font-semibold flex items-center justify-center gap-2 transition-colors"
             >
               <Filter className="w-4 h-4" />
               Show Filters
@@ -508,14 +508,14 @@ const LawyerCatalogue: React.FC = () => {
 
             {filteredAndSortedLawyers.length === 0 && (
               <div className="text-center py-12">
-                <div className="text-gray-400 mb-4">
+                <div className="text-gray-500 mb-4">
                   <Filter className="w-16 h-16 mx-auto" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-600 mb-2">No lawyers found</h3>
-                <p className="text-gray-500 mb-4">Try adjusting your filters to see more results</p>
+                <h3 className="text-xl font-semibold text-white mb-2">No lawyers found</h3>
+                <p className="text-gray-300 mb-4">Try adjusting your filters to see more results</p>
                 <button
                   onClick={resetFilters}
-                  className="bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-6 rounded-lg font-semibold transition-colors"
+                  className="bg-gold hover:bg-yellow-600 text-dark-blue py-2 px-6 rounded-lg font-semibold transition-colors"
                 >
                   Reset Filters
                 </button>
@@ -532,19 +532,19 @@ const LawyerCatalogue: React.FC = () => {
           height: 20px;
           width: 20px;
           border-radius: 50%;
-          background: #6366f1;
+          background: #EB9601;
           cursor: pointer;
-          box-shadow: 0 2px 6px rgba(99, 102, 241, 0.4);
+          box-shadow: 0 2px 6px rgba(235, 150, 1, 0.4);
         }
 
         .slider::-moz-range-thumb {
           height: 20px;
           width: 20px;
           border-radius: 50%;
-          background: #6366f1;
+          background: #EB9601;
           cursor: pointer;
           border: none;
-          box-shadow: 0 2px 6px rgba(99, 102, 241, 0.4);
+          box-shadow: 0 2px 6px rgba(235, 150, 1, 0.4);
         }
         `
       }} />
