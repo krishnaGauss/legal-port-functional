@@ -26,8 +26,11 @@ const Header = ({ user, onAuthClick, onSignOut }: HeaderProps) => {
 
         {/* Center: Navigation */}
         <nav className="hidden lg:flex items-center gap-8">
-          <a href="#home" className="hover:text-gold transition-colors">Home</a>
+          <a href="/" className="hover:text-gold transition-colors">Home</a>
           <a href="#advisors" className="hover:text-gold transition-colors">Our Advisors</a>
+          {user && (
+            <a href="/catalogue" className="hover:text-gold transition-colors">Find Lawyers</a>
+          )}
           <a href="#contact" className="hover:text-gold transition-colors">Contact Us</a>
         </nav>
 

@@ -525,7 +525,8 @@ const LawyerCatalogue: React.FC = () => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style dangerouslySetInnerHTML={{
+        __html: `
         .slider::-webkit-slider-thumb {
           appearance: none;
           height: 20px;
@@ -545,7 +546,8 @@ const LawyerCatalogue: React.FC = () => {
           border: none;
           box-shadow: 0 2px 6px rgba(99, 102, 241, 0.4);
         }
-      `}</style>
+        `
+      }} />
     </div>
   );
 };
