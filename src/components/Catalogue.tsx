@@ -1,24 +1,9 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Star, Phone, MessageCircle, User, CheckCircle, Filter, X, ChevronDown, Search, MapPin } from 'lucide-react';
+import { fetchLawyers, Lawyer } from '../services/lawyerService';
 
-interface Lawyer {
-  id: number;
-  name: string;
-  specializations: string[];
-  rating: number;
-  reviews: number;
-  experience: number;
-  isOnline: boolean;
-  pricing: {
-    audio: number;
-    video: number;
-    chat: number;
-  };
-  image: string;
-  connections: number;
-  verified: boolean;
-}
+
 
 interface Filters {
   maxAudioRate: number;
@@ -32,112 +17,27 @@ interface Filters {
 }
 
 const LawyerCatalogue: React.FC = () => {
-  const [lawyers] = useState<Lawyer[]>([
-    {
-      id: 1,
-      name: "Kausik Chatterjee",
-      specializations: ["Commercial", "Civil", "Corporate"],
-      rating: 4.9,
-      reviews: 1121,
-      experience: 15,
-      isOnline: true,
-      pricing: { audio: 20, video: 10, chat: 15 },
-      image: "KC",
-      connections: 0,
-      verified: true
-    },
-    {
-      id: 2,
-      name: "Priya Sharma",
-      specializations: ["Family", "Criminal", "Property"],
-      rating: 4.7,
-      reviews: 856,
-      experience: 12,
-      isOnline: true,
-      pricing: { audio: 25, video: 15, chat: 18 },
-      image: "PS",
-      connections: 234,
-      verified: true
-    },
-    {
-      id: 3,
-      name: "Rajesh Kumar",
-      specializations: ["Tax", "Corporate", "Intellectual Property"],
-      rating: 4.8,
-      reviews: 692,
-      experience: 18,
-      isOnline: false,
-      pricing: { audio: 30, video: 20, chat: 22 },
-      image: "RK",
-      connections: 567,
-      verified: true
-    },
-    {
-      id: 4,
-      name: "Anita Desai",
-      specializations: ["Employment", "Labor", "Contract"],
-      rating: 4.6,
-      reviews: 423,
-      experience: 8,
-      isOnline: true,
-      pricing: { audio: 18, video: 12, chat: 14 },
-      image: "AD",
-      connections: 89,
-      verified: false
-    },
-    {
-      id: 5,
-      name: "Vikram Singh",
-      specializations: ["Criminal", "Civil Rights", "Immigration"],
-      rating: 4.9,
-      reviews: 1523,
-      experience: 22,
-      isOnline: true,
-      pricing: { audio: 35, video: 25, chat: 28 },
-      image: "VS",
-      connections: 892,
-      verified: true
-    },
-    {
-      id: 6,
-      name: "Meera Gupta",
-      specializations: ["Environmental", "Public Interest", "NGO"],
-      rating: 4.5,
-      reviews: 234,
-      experience: 6,
-      isOnline: false,
-      pricing: { audio: 15, video: 8, chat: 12 },
-      image: "MG",
-      connections: 45,
-      verified: true
-    },
-    {
-      id: 7,
-      name: "Arjun Patel",
-      specializations: ["Real Estate", "Construction", "Banking"],
-      rating: 4.8,
-      reviews: 967,
-      experience: 14,
-      isOnline: true,
-      pricing: { audio: 28, video: 18, chat: 20 },
-      image: "AP",
-      connections: 445,
-      verified: true
-    },
-    {
-      id: 8,
-      name: "Sunita Rao",
-      specializations: ["Healthcare", "Medical Malpractice", "Insurance"],
-      rating: 4.7,
-      reviews: 678,
-      experience: 11,
-      isOnline: true,
-      pricing: { audio: 22, video: 14, chat: 16 },
-      image: "SR",
-      connections: 234,
-      verified: true
-    }
-  ]);
+  const [lawyers, setLawyers] = useState<Lawyer[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadLawyers = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const fetchedLawyers = await fetchLawyers();
+        setLawyers(fetchedLawyers);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load lawyers');
+        console.error('Error loading lawyers:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadLawyers();
+  }, []);
 
   const [filters, setFilters] = useState<Filters>({
     maxAudioRate: 40,
@@ -549,11 +449,43 @@ const LawyerCatalogue: React.FC = () => {
 
           {/* Lawyers Grid */}
           <div className="xl:col-span-5">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-8">
-              {filteredAndSortedLawyers.map(lawyer => (
-                <LawyerCard key={lawyer.id} lawyer={lawyer} />
-              ))}
-            </div>
+            {loading ? (
+              <div className="text-center py-20">
+                <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-12 max-w-md mx-auto border border-white/20">
+                  <div className="text-gray-400 mb-6">
+                    <div className="w-20 h-20 mx-auto opacity-50 animate-spin rounded-full border-4 border-gold border-t-transparent"></div>
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-4">Loading lawyers...</h3>
+                  <p className="text-gray-300 leading-relaxed">
+                    Please wait while we fetch the latest lawyer profiles
+                  </p>
+                </div>
+              </div>
+            ) : error ? (
+              <div className="text-center py-20">
+                <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-12 max-w-md mx-auto border border-white/20">
+                  <div className="text-red-400 mb-6">
+                    <X className="w-20 h-20 mx-auto opacity-50" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-4">Error loading lawyers</h3>
+                  <p className="text-gray-300 mb-8 leading-relaxed">
+                    {error}
+                  </p>
+                  <button
+                    onClick={() => window.location.reload()}
+                    className="bg-gradient-to-r from-gold to-yellow-600 hover:from-yellow-600 hover:to-gold text-dark-blue py-3 px-8 rounded-xl font-bold transition-all duration-300 shadow-lg shadow-gold/25 hover:shadow-xl hover:scale-105"
+                  >
+                    Try Again
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-8">
+                {filteredAndSortedLawyers.map(lawyer => (
+                  <LawyerCard key={lawyer.id} lawyer={lawyer} />
+                ))}
+              </div>
+            )}
 
             {/* No Results State */}
             {filteredAndSortedLawyers.length === 0 && (
