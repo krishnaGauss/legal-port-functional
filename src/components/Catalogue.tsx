@@ -197,15 +197,27 @@ const LawyerCatalogue: React.FC = () => {
                 {lawyer.image}
               </div>
               <h3 className="font-bold text-xl mb-2 text-center">{lawyer.name}</h3>
-              <div className="flex flex-wrap justify-center gap-1 mb-2">
+              <div className="flex flex-wrap justify-center gap-1 mb-2 relative group">
                 {lawyer.specializations.slice(0, 2).map((spec, index) => (
                   <span key={index} className="text-xs bg-white/10 backdrop-blur-sm px-2 py-1 rounded-lg border border-white/20">
                     {spec}
                   </span>
                 ))}
                 {lawyer.specializations.length > 2 && (
-                  <span className="text-xs text-gray-300">+{lawyer.specializations.length - 2} more</span>
+                  <span className="text-xs text-gray-300 cursor-help">+{lawyer.specializations.length - 2} more</span>
                 )}
+                
+                {/* Hover tooltip for all specializations */}
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-dark-blue/95 backdrop-blur-sm text-white text-xs rounded-lg px-3 py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10 whitespace-nowrap border border-gold/20 shadow-xl">
+                  <div className="flex flex-wrap gap-1 max-w-xs">
+                    {lawyer.specializations.map((spec, index) => (
+                      <span key={index} className="bg-gold/20 px-2 py-1 rounded border border-gold/30">
+                        {spec}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-dark-blue/95"></div>
+                </div>
               </div>
             </div>
           </div>
@@ -516,9 +528,9 @@ const LawyerCatalogue: React.FC = () => {
           
         </div>
 
-        <div className="grid grid-cols-1 xl:grid-cols-6 gap-8">
+        <div className="grid grid-cols-1 xl:grid-cols-5 gap-8">
           {/* Filters Sidebar */}
-          <div className="xl:col-span-1">
+          <div className="xl:col-span-1"></div>
             <button
               onClick={() => setShowFilters(true)}
               className="xl:hidden w-full mb-6 bg-gradient-to-r from-gold to-yellow-600 hover:from-yellow-600 hover:to-gold text-dark-blue py-4 px-6 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all duration-300 shadow-lg shadow-gold/25 hover:shadow-xl hover:scale-105"
@@ -530,7 +542,7 @@ const LawyerCatalogue: React.FC = () => {
           </div>
 
           {/* Lawyers Grid */}
-          <div className="xl:col-span-5">
+          <div className="xl:col-span-4"></div>
             {loading ? (
               <div className="text-center py-20">
                 <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-12 max-w-md mx-auto border border-white/20">
