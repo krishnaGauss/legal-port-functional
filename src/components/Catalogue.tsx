@@ -12,6 +12,7 @@ interface Filters {
   minRating: number;
   minExperience: number;
   onlineOnly: boolean;
+  specializations: string[];
   sortBy: 'rating' | 'experience' | 'audioRate' | 'videoRate' | 'chatRate' | 'name';
   sortOrder: 'asc' | 'desc';
 }
@@ -46,9 +47,25 @@ const LawyerCatalogue: React.FC = () => {
     minRating: 0,
     minExperience: 0,
     onlineOnly: false,
+    specializations: [],
     sortBy: 'rating',
     sortOrder: 'desc'
   });
+
+  const availableSpecializations = [
+    'Matrimonial',
+    'Commercial',
+    'Consumer',
+    'Child Laws',
+    'Civil',
+    'Corporate',
+    'Labour Law',
+    'Property Rights',
+    'Cheque Bounce',
+    'Documentation',
+    'Criminal',
+    'Challans'
+  ];
 
   const [showFilters, setShowFilters] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -58,8 +75,16 @@ const LawyerCatalogue: React.FC = () => {
       const matchesSearch = lawyer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            lawyer.specializations.some(spec => spec.toLowerCase().includes(searchTerm.toLowerCase()));
       
+      const matchesSpecialization = filters.specializations.length === 0 ||
+                                   filters.specializations.some(filterSpec => 
+                                     lawyer.specializations.some(lawyerSpec => 
+                                       lawyerSpec.toLowerCase().includes(filterSpec.toLowerCase())
+                                     )
+                                   );
+      
       return (
         matchesSearch &&
+        matchesSpecialization &&
         lawyer.pricing.audio <= filters.maxAudioRate &&
         lawyer.pricing.video <= filters.maxVideoRate &&
         lawyer.pricing.chat <= filters.maxChatRate &&
@@ -123,10 +148,20 @@ const LawyerCatalogue: React.FC = () => {
       minRating: 0,
       minExperience: 0,
       onlineOnly: false,
+      specializations: [],
       sortBy: 'rating',
       sortOrder: 'desc'
     });
     setSearchTerm('');
+  };
+
+  const toggleSpecialization = (specialization: string) => {
+    setFilters(prev => ({
+      ...prev,
+      specializations: prev.specializations.includes(specialization)
+        ? prev.specializations.filter(s => s !== specialization)
+        : [...prev.specializations, specialization]
+    }));
   };
 
   const LawyerCard: React.FC<{ lawyer: Lawyer }> = ({ lawyer }) => {
@@ -310,76 +345,123 @@ const LawyerCatalogue: React.FC = () => {
           </div>
         </div>
 
+        <div>
+          <label className="block text-sm font-bold text-gray-700 mb-4">Specializations</label>
+          <div className="space-y-3 max-h-48 overflow-y-auto">
+            {availableSpecializations.map((specialization) => (
+              <label
+                key={specialization}
+                className="flex items-center space-x-3 cursor-pointer group hover:bg-gray-50 p-2 rounded-lg transition-colors"
+              >
+                <input
+                  type="checkbox"
+                  checked={filters.specializations.includes(specialization)}
+                  onChange={() => toggleSpecialization(specialization)}
+                  className="w-5 h-5 text-gold bg-gray-100 border-2 border-gray-300 rounded focus:ring-gold focus:ring-2 transition-all duration-300"
+                />
+                <span className="text-sm font-medium text-gray-700 group-hover:text-gold transition-colors">
+                  {specialization}
+                </span>
+              </label>
+            ))}
+          </div>
+        </div>
+
         <div className="space-y-5">
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-3">
               Max Audio Rate: <span className="text-gold">₹{filters.maxAudioRate}/min</span>
             </label>
-            <input
-              type="range"
-              min="10"
-              max="40"
-              value={filters.maxAudioRate}
-              onChange={(e) => updateFilter('maxAudioRate', parseInt(e.target.value))}
-              className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
-            />
+            <div className="relative">
+              <input
+                type="range"
+                min="10"
+                max="40"
+                value={filters.maxAudioRate}
+                onChange={(e) => updateFilter('maxAudioRate', parseInt(e.target.value))}
+                className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-grab active:cursor-grabbing slider"
+                style={{
+                  background: `linear-gradient(to right, #EB9601 0%, #EB9601 ${((filters.maxAudioRate - 10) / (40 - 10)) * 100}%, #E5E7EB ${((filters.maxAudioRate - 10) / (40 - 10)) * 100}%, #E5E7EB 100%)`
+                }}
+              />
+            </div>
           </div>
 
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-3">
               Max Video Rate: <span className="text-gold">₹{filters.maxVideoRate}/min</span>
             </label>
-            <input
-              type="range"
-              min="5"
-              max="30"
-              value={filters.maxVideoRate}
-              onChange={(e) => updateFilter('maxVideoRate', parseInt(e.target.value))}
-              className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
-            />
+            <div className="relative">
+              <input
+                type="range"
+                min="5"
+                max="30"
+                value={filters.maxVideoRate}
+                onChange={(e) => updateFilter('maxVideoRate', parseInt(e.target.value))}
+                className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-grab active:cursor-grabbing slider"
+                style={{
+                  background: `linear-gradient(to right, #EB9601 0%, #EB9601 ${((filters.maxVideoRate - 5) / (30 - 5)) * 100}%, #E5E7EB ${((filters.maxVideoRate - 5) / (30 - 5)) * 100}%, #E5E7EB 100%)`
+                }}
+              />
+            </div>
           </div>
 
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-3">
               Max Chat Rate: <span className="text-gold">₹{filters.maxChatRate}/min</span>
             </label>
-            <input
-              type="range"
-              min="8"
-              max="35"
-              value={filters.maxChatRate}
-              onChange={(e) => updateFilter('maxChatRate', parseInt(e.target.value))}
-              className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
-            />
+            <div className="relative">
+              <input
+                type="range"
+                min="8"
+                max="35"
+                value={filters.maxChatRate}
+                onChange={(e) => updateFilter('maxChatRate', parseInt(e.target.value))}
+                className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-grab active:cursor-grabbing slider"
+                style={{
+                  background: `linear-gradient(to right, #EB9601 0%, #EB9601 ${((filters.maxChatRate - 8) / (35 - 8)) * 100}%, #E5E7EB ${((filters.maxChatRate - 8) / (35 - 8)) * 100}%, #E5E7EB 100%)`
+                }}
+              />
+            </div>
           </div>
 
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-3">
               Minimum Rating: <span className="text-gold">{filters.minRating} stars</span>
             </label>
-            <input
-              type="range"
-              min="0"
-              max="5"
-              step="0.1"
-              value={filters.minRating}
-              onChange={(e) => updateFilter('minRating', parseFloat(e.target.value))}
-              className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
-            />
+            <div className="relative">
+              <input
+                type="range"
+                min="0"
+                max="5"
+                step="0.1"
+                value={filters.minRating}
+                onChange={(e) => updateFilter('minRating', parseFloat(e.target.value))}
+                className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-grab active:cursor-grabbing slider"
+                style={{
+                  background: `linear-gradient(to right, #EB9601 0%, #EB9601 ${(filters.minRating / 5) * 100}%, #E5E7EB ${(filters.minRating / 5) * 100}%, #E5E7EB 100%)`
+                }}
+              />
+            </div>
           </div>
 
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-3">
               Minimum Experience: <span className="text-gold">{filters.minExperience} years</span>
             </label>
-            <input
-              type="range"
-              min="0"
-              max="25"
-              value={filters.minExperience}
-              onChange={(e) => updateFilter('minExperience', parseInt(e.target.value))}
-              className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
-            />
+            <div className="relative">
+              <input
+                type="range"
+                min="0"
+                max="25"
+                value={filters.minExperience}
+                onChange={(e) => updateFilter('minExperience', parseInt(e.target.value))}
+                className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-grab active:cursor-grabbing slider"
+                style={{
+                  background: `linear-gradient(to right, #EB9601 0%, #EB9601 ${(filters.minExperience / 25) * 100}%, #E5E7EB ${(filters.minExperience / 25) * 100}%, #E5E7EB 100%)`
+                }}
+              />
+            </div>
           </div>
         </div>
 
@@ -547,15 +629,35 @@ const LawyerCatalogue: React.FC = () => {
         }
 
         .slider::-webkit-slider-track {
-          background: linear-gradient(90deg, #EB9601, #E5E7EB);
+          background: transparent;
           height: 12px;
           border-radius: 6px;
         }
 
         .slider::-moz-range-track {
-          background: linear-gradient(90deg, #EB9601, #E5E7EB);
+          background: transparent;
           height: 12px;
           border-radius: 6px;
+          border: none;
+        }
+
+        .slider {
+          -webkit-appearance: none;
+          appearance: none;
+          height: 12px;
+          border-radius: 6px;
+          outline: none;
+          opacity: 0.9;
+          transition: opacity 0.3s;
+        }
+
+        .slider:hover {
+          opacity: 1;
+        }
+
+        .slider:active .slider::-webkit-slider-thumb {
+          transform: scale(1.3);
+          box-shadow: 0 8px 24px rgba(235, 150, 1, 0.8);
         }
         `
       }} />
