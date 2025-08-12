@@ -531,11 +531,7 @@ const LawyerCatalogue: React.FC = () => {
             </div>
           </div>
           
-          <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl px-6 py-3 inline-block">
-            <span className="text-sm text-gray-300 font-medium">
-              Showing <span className="text-gold font-bold">{filteredAndSortedLawyers.length}</span> of <span className="text-white font-bold">{lawyers.length}</span> lawyers
-            </span>
-          </div>
+          
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-6 gap-8">
